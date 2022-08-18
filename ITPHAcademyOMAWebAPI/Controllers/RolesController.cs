@@ -1,13 +1,13 @@
-﻿using ITPHProjectOMA.Models;
+﻿using ITPHAcademyOMAWebAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace ITPHProjectOMA.Controllers
+namespace ITPHAcademyOMAWebAPI.Controllers
 {
 
     [ApiController]
-    [Route("[controller]")]
+    [Route("roles")]
     public class RolesController : ControllerBase
     {
 
@@ -18,22 +18,25 @@ namespace ITPHProjectOMA.Controllers
             _context = context;
         }
 
-        // GET: RolesController
-        [HttpGet]
-        public ActionResult Index()
-        {
-            return View();
-        }
+
 
         // http://host:port/Roles/GetRoles
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Role>>> GetRoles()
+        [HttpGet("all")]
+        public async Task<ActionResult<IEnumerable<Role>>> GetRolesAsync()
         {
             var roles = await _context.Roles.ToListAsync();
-            return Ok(roles);
+            return roles;
+        }
+
+        [HttpPost("all")]
+        public async Task<ActionResult<IEnumerable<Role>>> GetRolesAsync2()
+        {
+            var roles = await _context.Roles.ToListAsync();
+            return roles;
         }
 
         // GET: RolesController/Details/5
+
         public ActionResult Details(int id)
         {
             return View();
@@ -106,5 +109,6 @@ namespace ITPHProjectOMA.Controllers
                 return View();
             }
         }
+
     }
 }

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
-namespace ITPHProjectOMA.Models
+namespace ITPHAcademyOMAWebAPI.Models
 {
     public partial class Customer
     {
@@ -12,7 +11,6 @@ namespace ITPHProjectOMA.Models
         }
 
         public int Id { get; set; }
-        
         public string Name { get; set; } = null!;
         public string Surname { get; set; } = null!;
         public string Username { get; set; } = null!;
