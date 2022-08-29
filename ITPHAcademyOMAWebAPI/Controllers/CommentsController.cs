@@ -11,55 +11,55 @@ namespace ITPHAcademyOMAWebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomersController : ControllerBase
+    public class CommentsController : ControllerBase
     {
         private readonly ITPHAcademyOMAContext _context;
 
-        public CustomersController(ITPHAcademyOMAContext context)
+        public CommentsController(ITPHAcademyOMAContext context)
         {
             _context = context;
         }
 
-        // GET: api/Customers
+        // GET: api/Comments
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
+        public async Task<ActionResult<IEnumerable<Comment>>> GetComments()
         {
-          if (_context.Customers == null)
+          if (_context.Comments == null)
           {
               return NotFound();
           }
-            return await _context.Customers.ToListAsync();
+            return await _context.Comments.ToListAsync();
         }
 
-        // GET: api/Customers/5
+        // GET: api/Comments/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Customer>> GetCustomer(int id)
+        public async Task<ActionResult<Comment>> GetComment(int id)
         {
-          if (_context.Customers == null)
+          if (_context.Comments == null)
           {
               return NotFound();
           }
-            var customer = await _context.Customers.FindAsync(id);
+            var comment = await _context.Comments.FindAsync(id);
 
-            if (customer == null)
+            if (comment == null)
             {
                 return NotFound();
             }
 
-            return customer;
+            return comment;
         }
 
-        // PUT: api/Customers/5
+        // PUT: api/Comments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCustomer(int id, Customer customer)
+        public async Task<IActionResult> PutComment(int id, Comment comment)
         {
-            if (id != customer.Id)
+            if (id != comment.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(customer).State = EntityState.Modified;
+            _context.Entry(comment).State = EntityState.Modified;
 
             try
             {
@@ -67,7 +67,7 @@ namespace ITPHAcademyOMAWebAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CustomerExists(id))
+                if (!CommentExists(id))
                 {
                     return NotFound();
                 }
@@ -80,44 +80,44 @@ namespace ITPHAcademyOMAWebAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Customers
+        // POST: api/Comments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
+        public async Task<ActionResult<Comment>> PostComment(Comment comment)
         {
-          if (_context.Customers == null)
+          if (_context.Comments == null)
           {
-              return Problem("Entity set 'ITPHAcademyOMAContext.Customers'  is null.");
+              return Problem("Entity set 'ITPHAcademyOMAContext.Comments'  is null.");
           }
-            _context.Customers.Add(customer);
+            _context.Comments.Add(comment);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCustomer", new { id = customer.Id }, customer);
+            return CreatedAtAction("GetComment", new { id = comment.Id }, comment);
         }
 
-        // DELETE: api/Customers/5
+        // DELETE: api/Comments/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCustomer(int id)
+        public async Task<IActionResult> DeleteComment(int id)
         {
-            if (_context.Customers == null)
+            if (_context.Comments == null)
             {
                 return NotFound();
             }
-            var customer = await _context.Customers.FindAsync(id);
-            if (customer == null)
+            var comment = await _context.Comments.FindAsync(id);
+            if (comment == null)
             {
                 return NotFound();
             }
 
-            _context.Customers.Remove(customer);
+            _context.Comments.Remove(comment);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool CustomerExists(int id)
+        private bool CommentExists(int id)
         {
-            return (_context.Customers?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Comments?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

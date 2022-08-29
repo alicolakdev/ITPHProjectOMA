@@ -1,16 +1,18 @@
-﻿using ITPHAcademyOMAWebAPI.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ITPHAcademyOMAWebAPI.Models;
 
 namespace ITPHAcademyOMAWebAPI.Controllers
 {
-
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("roles")]
     public class RolesController : ControllerBase
     {
-
         private readonly ITPHAcademyOMAContext _context;
 
         public RolesController(ITPHAcademyOMAContext context)
@@ -18,97 +20,104 @@ namespace ITPHAcademyOMAWebAPI.Controllers
             _context = context;
         }
 
-
-
-        // http://host:port/Roles/GetRoles
-        [HttpGet("all")]
-        public async Task<ActionResult<IEnumerable<Role>>> GetRolesAsync()
+        // GET: api/Roles
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Role>>> GetRoles()
         {
-            var roles = await _context.Roles.ToListAsync();
-            return roles;
+          if (_context.Roles == null)
+          {
+              return NotFound();
+          }
+            return await _context.Roles.ToListAsync();
         }
 
-        [HttpPost("all")]
-        public async Task<ActionResult<IEnumerable<Role>>> GetRolesAsync2()
+        // GET: api/Roles/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Role>> GetRole(int id)
         {
-            var roles = await _context.Roles.ToListAsync();
-            return roles;
+          if (_context.Roles == null)
+          {
+              return NotFound();
+          }
+            var role = await _context.Roles.FindAsync(id);
+
+            if (role == null)
+            {
+                return NotFound();
+            }
+
+            return role;
         }
 
-        // GET: RolesController/Details/5
-
-        public ActionResult Details(int id)
+        // PUT: api/Roles/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutRole(int id, Role role)
         {
-            return View();
-        }
+            if (id != role.Id)
+            {
+                return BadRequest();
+            }
 
-        // GET: RolesController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
+            _context.Entry(role).State = EntityState.Modified;
 
-        // POST: RolesController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
             try
             {
-                return RedirectToAction(nameof(Index));
+                await _context.SaveChangesAsync();
             }
-            catch
+            catch (DbUpdateConcurrencyException)
             {
-                return View();
+                if (!RoleExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
             }
+
+            return NoContent();
         }
 
-        private ActionResult View()
-        {
-            throw new NotImplementedException();
-        }
-
-        // GET: RolesController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: RolesController/Edit/5
+        // POST: api/Roles
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult<Role>> PostRole(Role role)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+          if (_context.Roles == null)
+          {
+              return Problem("Entity set 'ITPHAcademyOMAContext.Roles'  is null.");
+          }
+            _context.Roles.Add(role);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetRole", new { id = role.Id }, role);
         }
 
-        // GET: RolesController/Delete/5
-        public ActionResult Delete(int id)
+        // DELETE: api/Roles/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteRole(int id)
         {
-            return View();
+            if (_context.Roles == null)
+            {
+                return NotFound();
+            }
+            var role = await _context.Roles.FindAsync(id);
+            if (role == null)
+            {
+                return NotFound();
+            }
+
+            _context.Roles.Remove(role);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
 
-        // POST: RolesController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        private bool RoleExists(int id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return (_context.Roles?.Any(e => e.Id == id)).GetValueOrDefault();
         }
-
     }
 }
